@@ -28,4 +28,4 @@ jobs:
         with:
           branch: gh-pages  # The branch the action should deploy to.
           folder: docs      # The folder the action should deploy.
-          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically creates this secret to authenticate in your workflow.
+          token: ${{ secrets.DEPLOY_TOKEN }}  # GitHub automatically creates this secret to authenticate in your workflow.

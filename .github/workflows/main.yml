@@ -24,7 +24,7 @@ jobs:
         run: npm run build -- --output-path docs --base-href /permacultr_angular/
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.1.4
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           branch: gh-pages  # The branch the action should deploy to.
           folder: docs      # The folder the action should deploy.

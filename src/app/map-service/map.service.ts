@@ -49,7 +49,7 @@ export class MapService {
     // Assuming we're directly starting polygon drawing here
     const polygonDrawer = new L.Draw.Polygon(this.map as any, {
       shapeOptions: {
-        color: '#f357a1', // Example styling, customize as needed
+        color: '#f377a1', // Example styling, customize as needed
       },
     });
     polygonDrawer.enable();

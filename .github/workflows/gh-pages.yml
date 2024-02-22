@@ -33,5 +33,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: 'FaithTech-Austria/permacultr_angular.git'
           token: ${{ secrets.DEPLOY_TOKEN }}
-          publish_dir: ./dist/permacultr
+          publish_dir: dist/permacultr
           enable_jekyll: true

@@ -8,10 +8,9 @@ describe('LayerConfigStepperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LayerConfigStepperComponent]
-    })
-    .compileComponents();
-    
+      imports: [LayerConfigStepperComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(LayerConfigStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

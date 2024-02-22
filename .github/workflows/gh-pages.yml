@@ -31,6 +31,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           repository: 'FaithTech-Austria/permacultr_angular.git'
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.OWNER_TOKEN }}
           publish_dir: dist/angular-github-actions
           enable_jekyll: true

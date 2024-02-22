@@ -1,0 +1,56 @@
+<div>
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+    <div class="flex flex-col h-full">
+      <div class="flex-grow">
+        <div class="flex flex-col gap-4 mx-4">
+          <div class="font-bold">Project data</div>
+          <mat-divider></mat-divider>
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="4"
+              cdkAutosizeMaxRows="12"
+              matInput
+              formControlName="description"></textarea>
+          </mat-form-field>
+          <div class="font-bold !mt-6">Area</div>
+          <mat-divider></mat-divider>
+          @if (!layer) {
+            <button
+              [disabled]="isDrawing || layer"
+              (click)="drawPolygon()"
+              type="button"
+              class="!bg-green-600 !text-white flex flex-row justify-between disabled:!bg-gray-300 disabled:!text-gray-600"
+              mat-flat-button>
+              <mat-icon fontIcon="edit"></mat-icon>
+              @if (isDrawing) {
+                <span>Drawing...</span>
+              } @else {
+                <span>Draw area of interest</span>
+              }
+            </button>
+          } @else {
+            <span class="break-words">{{
+              layer!.getBounds().toBBoxString()
+            }}</span>
+          }
+        </div>
+      </div>
+      @if (layer) {
+        <div class="flex justify-end mt-4 mx-4">
+          <button
+            type="submit"
+            mat-flat-button
+            class="!bg-green-600 !text-white">
+            Create project
+          </button>
+        </div>
+      }
+    </div>
+  </form>
+</div>

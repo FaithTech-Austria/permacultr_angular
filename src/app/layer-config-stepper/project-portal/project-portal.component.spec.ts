@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectPortalComponent } from './project-portal.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ProjectPortalComponent', () => {
   let component: ProjectPortalComponent;
@@ -8,7 +9,7 @@ describe('ProjectPortalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectPortalComponent],
+      imports: [ProjectPortalComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProjectPortalComponent);

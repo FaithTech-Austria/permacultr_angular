@@ -19,7 +19,4 @@ export class MapComponent implements AfterViewInit {
 }
 
 // TODO Create Project => Name, Description, Polygon => areaOfInterest
-// TODO BaseLayer:
-// TODO
-// TODO
-// TODO
+// TODO BaseLayer

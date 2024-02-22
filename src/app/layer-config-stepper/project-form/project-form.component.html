@@ -35,9 +35,13 @@
               }
             </button>
           } @else {
-            <span class="break-words">{{
-              layer!.getBounds().toBBoxString()
-            }}</span>
+            <span class="break-words">
+              {{ layer!.getBounds().getSouth() }},{{
+                layer!.getBounds().getWest()
+              }},{{ layer!.getBounds().getNorth() }},{{
+                layer!.getBounds().getEast()
+              }}
+            </span>
           }
         </div>
       </div>

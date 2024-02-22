@@ -1,59 +1,122 @@
 import { Injectable } from '@angular/core';
 import L from 'leaflet';
 import 'leaflet-draw';
+import 'leaflet-editable';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MapService {
-  private map: L.Map = {} as L.Map;
-  private editableLayers: L.FeatureGroup = {} as L.FeatureGroup;
+  private map!: L.DrawMap;
+  public editableLayers!: L.FeatureGroup;
+  private selectedPolygon$ = new BehaviorSubject<L.Polygon | null>(null);
+  public selectedPolygonObservable = this.selectedPolygon$.asObservable();
 
-  constructor() {
-    // Initialize any properties here if necessary
-  }
+  private drawingComplete$ = new Subject<L.Layer>();
+  public drawingCompleteObservable$ = this.drawingComplete$.asObservable();
 
-  initializeMap(mapContainerId: string, center: L.LatLngExpression, zoomLevel: number): void {
+  private layerDeleted$ = new Subject<L.Layer>();
+  public layerDeletedObservable$ = this.layerDeleted$.asObservable();
+
+  public initializeMap(
+    mapContainerId: string,
+    center: L.LatLngExpression,
+    zoomLevel: number
+  ): void {
     this.map = L.map(mapContainerId, {
-      center: center,
+      center,
       zoom: zoomLevel,
-      zoomControl: false
+      zoomControl: false,
+      editable: true,
     });
 
-    this.addTileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', 19,
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>');
-
-    // Initialize editable layers
+    this.addTileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', 20, [
+      'mt0',
+      'mt1',
+      'mt2',
+      'mt3',
+    ]);
     this.initializeEditableLayers();
+    this.setupClickEvents();
   }
 
-  private addTileLayer(tileUrl: string, maxZoom: number, attribution: string): void {
+  public startDrawingPolygon(): void {
+    const color = `#${(0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6)}`;
+    new L.Draw.Polygon(this.map, {
+      shapeOptions: {
+        color,
+        fillOpacity: 0.3,
+        opacity: 0.5,
+        weight: 5.5,
+      },
+    }).enable();
+  }
+
+  public setSelectedPolygon(polygon: L.Polygon | null): void {
+    this.selectedPolygon$.next(polygon);
+  }
+
+  private addTileLayer(
+    tileUrl: string,
+    maxZoom: number,
+    subDomains: string[]
+  ): void {
     L.tileLayer(tileUrl, {
-      maxZoom: maxZoom,
-      attribution: attribution
+      maxZoom,
+      subdomains: subDomains,
     }).addTo(this.map);
   }
 
   private initializeEditableLayers(): void {
-    this.editableLayers = new L.FeatureGroup();
-    this.map.addLayer(this.editableLayers);
+    this.editableLayers = new L.FeatureGroup().addTo(this.map);
 
-    // Setup the 'draw:created' event listener to add the drawn layer to editableLayers
-    this.map.on('draw:created', (e) => {
-      const { layer } = e;
-      this.editableLayers.addLayer(layer);
+    this.map.on('draw:created', e => {
+      this.editableLayers.addLayer(e.layer);
+      this.drawingComplete$.next(e.layer);
     });
   }
 
-  public startDrawingPolygon(): void {
-    // Assuming we're directly starting polygon drawing here
-    const polygonDrawer = new L.Draw.Polygon(this.map as any, {
-      shapeOptions: {
-        color: '#f357a1', // Example styling, customize as needed
-      },
+  private setupClickEvents(): void {
+    this.editableLayers.on('click', event => {
+      L.DomEvent.stopPropagation(event);
+      this.resetSelectedPolygonsStyle();
+      this.setSelectedPolygonStyle(event.layer as L.Polygon);
     });
-    polygonDrawer.enable();
 
-    // Optionally, handle drawing completion or other events here
+    this.map.on('click', () => this.resetSelectedPolygonsStyle());
+  }
+
+  private setSelectedPolygonStyle(polygon: L.Polygon): void {
+    polygon.setStyle(this.selectedPolygonStyle);
+    this.setSelectedPolygon(polygon);
+  }
+
+  private resetSelectedPolygonsStyle(): void {
+    this.getSelectedPolygon()?.setStyle(this.nonSelectedPolygonStyle);
+    this.getSelectedPolygon()?.disableEdit();
+    this.setSelectedPolygon(null);
+  }
+
+  private getSelectedPolygon(): L.Polygon | null {
+    return this.selectedPolygon$.value;
+  }
+
+  private readonly nonSelectedPolygonStyle = {
+    fillOpacity: 0.3,
+    opacity: 0.5,
+    weight: 5.5,
+  };
+
+  private readonly selectedPolygonStyle = {
+    fillOpacity: 0.75,
+    opacity: 1,
+    weight: 7.5,
+  };
+
+  public deleteSelectedPolygon(layer: L.Layer) {
+    this.setSelectedPolygon(null);
+    layer.remove();
+    this.layerDeleted$.next(layer);
   }
 }

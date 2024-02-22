@@ -8,10 +8,9 @@ describe('MapUtilsOverlayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MapUtilsOverlayComponent]
-    })
-    .compileComponents();
-    
+      imports: [MapUtilsOverlayComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(MapUtilsOverlayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

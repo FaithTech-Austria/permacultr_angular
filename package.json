@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "prettier": "npx prettier --write .",
-    "build:prod": "ng build --configuration production --base-href https://https://faithtech-austria.github.io/permacultr_angular/angular-github-actions/",
+    "build:prod": "ng build --configuration production --base-href https://faithtech-austria.github.io/permacultr_angular/angular-github-actions/",
     "test:headless": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "private": true,

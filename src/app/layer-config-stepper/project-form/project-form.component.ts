@@ -14,6 +14,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MapService } from '../../map-service/map.service';
 import { MatIcon } from '@angular/material/icon';
 import { Project } from './Project';
+import { MapDataService } from '../../map-data-service/map-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-form',
@@ -38,7 +40,11 @@ export class ProjectFormComponent implements OnInit {
   protected layer: L.Polygon | null = null;
   private project: Project = {} as Project;
 
-  constructor(protected mapService: MapService) {}
+  constructor(
+    protected mapService: MapService,
+    protected mapDataService: MapDataService,
+    protected router: Router
+  ) {}
 
   public ngOnInit(): void {
     this.mapService.drawingCompleteObservable$.subscribe(layer => {
@@ -72,6 +78,9 @@ export class ProjectFormComponent implements OnInit {
         description: this.projectForm.controls.description.value,
         areaOfInterest: this.layer!,
       };
+
+      this.mapDataService.setProject(this.project);
+      this.router.navigate(['base-map']);
     }
   }
 }

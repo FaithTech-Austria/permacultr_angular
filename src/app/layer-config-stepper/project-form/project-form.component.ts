@@ -13,6 +13,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MapService } from '../../map-service/map.service';
 import { MatIcon } from '@angular/material/icon';
+import { Project } from './Project';
 
 @Component({
   selector: 'app-project-form',
@@ -35,6 +36,7 @@ export class ProjectFormComponent implements OnInit {
   protected projectForm = this.buildForm();
   protected isDrawing = false;
   protected layer: L.Polygon | null = null;
+  private project: Project = {} as Project;
 
   constructor(protected mapService: MapService) {}
 
@@ -65,7 +67,11 @@ export class ProjectFormComponent implements OnInit {
 
   protected onSubmit() {
     if (this.projectForm.valid) {
-      //TODO Build Project Model
+      this.project = {
+        name: this.projectForm.controls.name.value!,
+        description: this.projectForm.controls.description.value,
+        areaOfInterest: this.layer!,
+      };
     }
   }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MapService } from '../map-service/map.service';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -11,9 +10,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './layer-config-stepper.component.css',
 })
 export class LayerConfigStepperComponent {
-  constructor(private mapService: MapService) {}
-
-  protected doStuf() {
-    this.mapService.startDrawingPolygon();
-  }
+  constructor() {}
 }

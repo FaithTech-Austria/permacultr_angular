@@ -1,0 +1,8 @@
+<div
+  class="transition ease-in-out delay-75 hover:scale-110 duration-300 absolute bg-gray-100 hover:shadow-2xl bottom-8 right-3 z-max w-auto h-auto rounded-2xl opacity-80">
+  @if (mapDataService.project.areaOfInterest) {
+    <button (click)="export()" mat-icon-button>
+      <mat-icon fontIcon="download"></mat-icon>
+    </button>
+  }
+</div>

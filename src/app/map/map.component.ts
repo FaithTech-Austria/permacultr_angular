@@ -2,11 +2,12 @@ import { AfterViewInit, Component } from '@angular/core';
 import { MapService } from '../map-service/map.service';
 import { MatButton } from '@angular/material/button';
 import { MapUtilsOverlayComponent } from './map-utils-overlay/map-utils-overlay.component';
+import { ExportOverlayComponent } from './export-overlay/export-overlay/export-overlay.component';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [MatButton, MapUtilsOverlayComponent],
+  imports: [MatButton, MapUtilsOverlayComponent, ExportOverlayComponent],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
 })

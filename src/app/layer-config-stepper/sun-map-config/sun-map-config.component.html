@@ -1,0 +1,12 @@
+<div class="mx-4 flex flex-col gap-4">
+  <div class="font-bold !mt-6">Sun Map</div>
+  <mat-divider></mat-divider>
+  <mat-form-field>
+    <mat-label>Choose a date</mat-label>
+    <input [formControl]="date" [matDatepicker]="picker" matInput />
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <button (click)="loadSunData()" mat-stroked-button>Load Sun Data</button>
+</div>

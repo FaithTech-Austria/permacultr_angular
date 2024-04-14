@@ -1,0 +1,36 @@
+<div class="mx-4 flex flex-col gap-4">
+  <div class="font-bold !mt-6">Base Map</div>
+  <mat-divider></mat-divider>
+  <form (submit)="onSubmit()" [formGroup]="baseMapForm">
+    <div class="flex flex-col">
+      <mat-checkbox formControlName="buildings">Buildings</mat-checkbox>
+      <mat-checkbox formControlName="streets">Streets</mat-checkbox>
+      <mat-checkbox formControlName="water">Waterways</mat-checkbox>
+      <div class="flex flex-row gap-4 !w-full">
+        <div class="flex flex-col gap-3 !w-full">
+          <mat-checkbox formControlName="contour"
+            >Contour - <span class="font-semibold">{{ slider.value }} m</span>
+          </mat-checkbox>
+          <mat-label>Contour Interval</mat-label>
+          <div class="flex flex-row align-middle">
+            <mat-slider
+              (change)="onChange(+slider.value)"
+              [discrete]="true"
+              [max]="30"
+              [min]="1"
+              [step]="1"
+              class="w-full grow">
+              <input #slider matSliderThumb />
+            </mat-slider>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row justify-end gap-2">
+        <button mat-stroked-button type="submit">Load</button>
+        <button mat-stroked-button routerLink="/sun-map" type="button">
+          Continue
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import L from 'leaflet';
+import L, { GeoJSON } from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet-editable';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -8,8 +8,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class MapService {
-  private map!: L.DrawMap;
   public editableLayers!: L.FeatureGroup;
+  private map!: L.DrawMap;
   private selectedPolygon$ = new BehaviorSubject<L.Polygon | null>(null);
   public selectedPolygonObservable = this.selectedPolygon$.asObservable();
 
@@ -18,6 +18,16 @@ export class MapService {
 
   private layerDeleted$ = new Subject<L.Layer>();
   public layerDeletedObservable$ = this.layerDeleted$.asObservable();
+  private readonly nonSelectedPolygonStyle = {
+    fillOpacity: 0.3,
+    opacity: 0.5,
+    weight: 5.5,
+  };
+  private readonly selectedPolygonStyle = {
+    fillOpacity: 0.75,
+    opacity: 1,
+    weight: 7.5,
+  };
 
   public initializeMap(
     mapContainerId: string,
@@ -41,11 +51,27 @@ export class MapService {
     this.setupClickEvents();
   }
 
+  public addGeojsonToMap(geojson: GeoJSON.GeoJsonObject) {
+    console.log(geojson);
+    return new L.GeoJSON(geojson).addTo(this.editableLayers);
+  }
+
+  public addToMap(geojson?: GeoJSON) {
+    if (geojson) {
+      geojson.addTo(this.editableLayers);
+    }
+  }
+
+  public removeGeojsonFromMap(geojson: GeoJSON | undefined) {
+    if (geojson) {
+      this.editableLayers.removeLayer(geojson);
+    }
+  }
+
   public startDrawingPolygon(): void {
-    const color = `#${(0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6)}`;
     new L.Draw.Polygon(this.map, {
       shapeOptions: {
-        color,
+        color: '#d5cccc',
         fillOpacity: 0.3,
         opacity: 0.5,
         weight: 5.5,
@@ -55,6 +81,12 @@ export class MapService {
 
   public setSelectedPolygon(polygon: L.Polygon | null): void {
     this.selectedPolygon$.next(polygon);
+  }
+
+  public deleteSelectedPolygon(layer: L.Layer) {
+    this.setSelectedPolygon(null);
+    layer.remove();
+    this.layerDeleted$.next(layer);
   }
 
   private addTileLayer(
@@ -100,23 +132,5 @@ export class MapService {
 
   private getSelectedPolygon(): L.Polygon | null {
     return this.selectedPolygon$.value;
-  }
-
-  private readonly nonSelectedPolygonStyle = {
-    fillOpacity: 0.3,
-    opacity: 0.5,
-    weight: 5.5,
-  };
-
-  private readonly selectedPolygonStyle = {
-    fillOpacity: 0.75,
-    opacity: 1,
-    weight: 7.5,
-  };
-
-  public deleteSelectedPolygon(layer: L.Layer) {
-    this.setSelectedPolygon(null);
-    layer.remove();
-    this.layerDeleted$.next(layer);
   }
 }
